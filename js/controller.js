@@ -173,7 +173,7 @@ function bounceBall() {
   document.getElementById('ball_shadow').setAttribute('cx', mapX(x, y) + w2 + topLeft)
   document.getElementById('ball_shadow').setAttribute('cy', mapY(x, y) + topPosition)
   document.getElementById('ball_shadow').setAttribute('rx', 5 * (tt + 1))
-  document.getElementById('ball_shadow').setAttribute('ry', 1 * (tt + 1))
+  document.getElementById('ball_shadow').setAttribute('ry', 2 * (tt + 1))
 }
 function ballPosition() {
   x = x1 + (x2 - x1) * t
@@ -188,9 +188,9 @@ function kickBall() {
     .setAttribute('y', mapY(x, y) - ballRadius / 2 + topPosition)
   document.getElementById('ball').setAttribute('width', ballRadius)
   document.getElementById('ball_shadow').setAttribute('cx', mapX(x, y) + w2 + topLeft)
-  document.getElementById('ball_shadow').setAttribute('cy', mapY(x, y) - 5 + topPosition)
+  document.getElementById('ball_shadow').setAttribute('cy', mapY(x, y) + topPosition)
   document.getElementById('ball_shadow').setAttribute('rx', 10)
-  document.getElementById('ball_shadow').setAttribute('ry', 3)
+  document.getElementById('ball_shadow').setAttribute('ry', 4)
 }
 function drawTrack() {
   x_l = x_1_1 + (x_1_2 - x_1_1) * t
@@ -798,21 +798,21 @@ function displayState() {
     document.getElementById('awayStateLabels').style.display = 'none'
     document.getElementById('homeName').textContent = teamNames['home'].toUpperCase()
     if ((y2 * 100) / hp < 30) {
-      statePositionY = 500
+      statePositionY = 300
     } else if ((y2 * 100) / hp < 70) {
-      statePositionY = 540
+      statePositionY = 250
     } else {
-      statePositionY = 500
+      statePositionY = 300
     }
     if ((x2 * 50) / w1 + 50 < 50) {
       document.getElementById('homeState').textContent = 'Ball Safe'
-      statePositionX = 350
+      statePositionX = 200
     } else if ((x2 * 50) / w1 + 50 < 75) {
       document.getElementById('homeState').textContent = 'Attacking'
-      statePositionX = 550
+      statePositionX = 400
     } else {
       document.getElementById('homeState').textContent = 'Dangerous Attack'
-      statePositionX = 700
+      statePositionX = 560
     }
     document.getElementById('homeStateLabels').setAttribute('transform', 'translate(' + statePositionX + ',' + statePositionY + ')');
     document.getElementById('homeStateBoard').setAttribute('width', max(document.getElementById('homeName').getBBox().width, document.getElementById('homeState').getBBox().width) + 70);
@@ -824,11 +824,11 @@ function displayState() {
     document.getElementById('awayStateLabels').style.display = 'block'
     document.getElementById('awayName').textContent = teamNames['away'].toUpperCase()
     if ((y2 * 100) / hp < 30) {
-      statePositionY = 500
+      statePositionY = 300
     } else if ((y2 * 100) / hp < 70) {
-      statePositionY = 540
+      statePositionY = 250
     } else {
-      statePositionY = 500
+      statePositionY = 300
     }
     if ((x2 * 50) / w1 + 50 < 25) {
       document.getElementById('awayState').textContent = 'Dangerous Attack'
@@ -1085,87 +1085,95 @@ function handleInfoData(data) {
   awayPlayerLongSleeveColor = jerseys['away']['player']['sleevelong']
   document.getElementById('homePlayerBase').setAttribute('fill', '#' + homePlayerColor);
   document.getElementById('awayPlayerBase').setAttribute('fill', '#' + awayPlayerColor);
-  document.getElementById('fade_homePlayerBase').setAttribute('fill', '#' + homePlayerColor);
-  document.getElementById('fade_awayPlayerBase').setAttribute('fill', '#' + awayPlayerColor);
+  document.getElementById('homePlayerBase1').setAttribute('fill', '#' + homePlayerColor);
+  document.getElementById('awayPlayerBase1').setAttribute('fill', '#' + awayPlayerColor);
+  document.getElementById('homePlayerBase2').setAttribute('fill', '#' + homePlayerColor);
+  document.getElementById('awayPlayerBase2').setAttribute('fill', '#' + awayPlayerColor);
+  // document.getElementById('fade_homePlayerBase').setAttribute('fill', '#' + homePlayerColor);
+  // document.getElementById('fade_awayPlayerBase').setAttribute('fill', '#' + awayPlayerColor);
   document.getElementById('state_homePlayerBase').setAttribute('fill', '#' + homePlayerColor);
   document.getElementById('state_awayPlayerBase').setAttribute('fill', '#' + awayPlayerColor);
+  document.getElementById('state_homePlayerBase1').setAttribute('fill', '#' + homePlayerColor);
+  document.getElementById('state_awayPlayerBase1').setAttribute('fill', '#' + awayPlayerColor);
+  document.getElementById('state_homePlayerBase2').setAttribute('fill', '#' + homePlayerColor);
+  document.getElementById('state_awayPlayerBase2').setAttribute('fill', '#' + awayPlayerColor);
   if (homePlayerSleeveColor) {
     document.getElementById('homePlayerLeftSleeve').setAttribute('fill', '#' + homePlayerSleeveColor);
     document.getElementById('homePlayerRightSleeve').setAttribute('fill', '#' + homePlayerSleeveColor);
-    document.getElementById('fade_homePlayerLeftSleeve').setAttribute('fill', '#' + homePlayerSleeveColor);
-    document.getElementById('fade_homePlayerRightSleeve').setAttribute('fill', '#' + homePlayerSleeveColor);
+    // document.getElementById('fade_homePlayerLeftSleeve').setAttribute('fill', '#' + homePlayerSleeveColor);
+    // document.getElementById('fade_homePlayerRightSleeve').setAttribute('fill', '#' + homePlayerSleeveColor);
     document.getElementById('state_homePlayerLeftSleeve').setAttribute('fill', '#' + homePlayerSleeveColor);
     document.getElementById('state_homePlayerRightSleeve').setAttribute('fill', '#' + homePlayerSleeveColor);
   } else {
     document.getElementById('homePlayerLeftSleeve').setAttribute('fill', '#' + homePlayerColor);
     document.getElementById('homePlayerRightSleeve').setAttribute('fill', '#' + homePlayerColor);
-    document.getElementById('fade_homePlayerLeftSleeve').setAttribute('fill', '#' + homePlayerColor);
-    document.getElementById('fade_homePlayerRightSleeve').setAttribute('fill', '#' + homePlayerColor);
-    document.getElementById('state_homePlayerLeftSleeve').setAttribute('fill', '#' + homePlayerColor);
-    document.getElementById('state_homePlayerRightSleeve').setAttribute('fill', '#' + homePlayerColor);
+    // document.getElementById('fade_homePlayerLeftSleeve').setAttribute('fill', '#' + homePlayerColor);
+    // document.getElementById('fade_homePlayerRightSleeve').setAttribute('fill', '#' + homePlayerColor);
+    // document.getElementById('state_homePlayerLeftSleeve').setAttribute('fill', '#' + homePlayerColor);
+    // document.getElementById('state_homePlayerRightSleeve').setAttribute('fill', '#' + homePlayerColor);
   }
   if (awayPlayerSleeveColor) {
     document.getElementById('awayPlayerLeftSleeve').setAttribute('fill', '#' + awayPlayerSleeveColor);
     document.getElementById('awayPlayerRightSleeve').setAttribute('fill', '#' + awayPlayerSleeveColor);
-    document.getElementById('fade_awayPlayerLeftSleeve').setAttribute('fill', '#' + awayPlayerSleeveColor);
-    document.getElementById('fade_awayPlayerRightSleeve').setAttribute('fill', '#' + awayPlayerSleeveColor);
+    // document.getElementById('fade_awayPlayerLeftSleeve').setAttribute('fill', '#' + awayPlayerSleeveColor);
+    // document.getElementById('fade_awayPlayerRightSleeve').setAttribute('fill', '#' + awayPlayerSleeveColor);
     document.getElementById('state_awayPlayerLeftSleeve').setAttribute('fill', '#' + awayPlayerSleeveColor);
     document.getElementById('state_awayPlayerRightSleeve').setAttribute('fill', '#' + awayPlayerSleeveColor);
   } else {
     document.getElementById('awayPlayerLeftSleeve').setAttribute('fill', '#' + awayPlayerColor);
     document.getElementById('awayPlayerRightSleeve').setAttribute('fill', '#' + awayPlayerColor);
-    document.getElementById('fade_awayPlayerLeftSleeve').setAttribute('fill', '#' + awayPlayerColor);
-    document.getElementById('fade_awayPlayerRightSleeve').setAttribute('fill', '#' + awayPlayerColor);
+    // document.getElementById('fade_awayPlayerLeftSleeve').setAttribute('fill', '#' + awayPlayerColor);
+    // document.getElementById('fade_awayPlayerRightSleeve').setAttribute('fill', '#' + awayPlayerColor);
     document.getElementById('state_awayPlayerLeftSleeve').setAttribute('fill', '#' + awayPlayerColor);
     document.getElementById('state_awayPlayerRightSleeve').setAttribute('fill', '#' + awayPlayerColor);
   }
   if (homePlayerLongSleeveColor) {
-    document.getElementById('homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
-    document.getElementById('homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
-    document.getElementById('fade_homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
-    document.getElementById('fade_homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
-    document.getElementById('state_homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
-    document.getElementById('state_homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
+    // document.getElementById('homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
+    // document.getElementById('homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
+    // document.getElementById('fade_homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
+    // document.getElementById('fade_homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
+    // document.getElementById('state_homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
+    // document.getElementById('state_homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
   } else {
-    document.getElementById('homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerColor);
-    document.getElementById('homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerColor);
-    document.getElementById('fade_homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerColor);
-    document.getElementById('fade_homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerColor);
-    document.getElementById('state_homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerColor);
-    document.getElementById('state_homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerColor);
+    // document.getElementById('homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerColor);
+    // document.getElementById('homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerColor);
+    // document.getElementById('fade_homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerColor);
+    // document.getElementById('fade_homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerColor);
+    // document.getElementById('state_homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerColor);
+    // document.getElementById('state_homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerColor);
   }
   if (awayPlayerLongSleeveColor) {
-    document.getElementById('awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
-    document.getElementById('awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
-    document.getElementById('fade_awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
-    document.getElementById('fade_awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
-    document.getElementById('state_awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
-    document.getElementById('state_awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
+    // document.getElementById('awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
+    // document.getElementById('awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
+    // document.getElementById('fade_awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
+    // document.getElementById('fade_awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
+    // document.getElementById('state_awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
+    // document.getElementById('state_awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
   } else {
-    document.getElementById('awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
-    document.getElementById('awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
-    document.getElementById('fade_awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
-    document.getElementById('fade_awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
-    document.getElementById('state_awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
-    document.getElementById('state_awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
+    // document.getElementById('awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
+    // document.getElementById('awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
+    // document.getElementById('fade_awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
+    // document.getElementById('fade_awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
+    // document.getElementById('state_awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
+    // document.getElementById('state_awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
   }
   if (homePlayerStripesColor) {
-    document.getElementById('homeStripes').setAttribute('fill', '#' + homePlayerStripesColor);
-    document.getElementById('fade_homeStripes').setAttribute('fill', '#' + homePlayerStripesColor);
-    document.getElementById('state_homeStripes').setAttribute('fill', '#' + homePlayerStripesColor);
+    // document.getElementById('homeStripes').setAttribute('fill', '#' + homePlayerStripesColor);
+    // document.getElementById('fade_homeStripes').setAttribute('fill', '#' + homePlayerStripesColor);
+    // document.getElementById('state_homeStripes').setAttribute('fill', '#' + homePlayerStripesColor);
   } else {
-    document.getElementById('homeStripes').setAttribute('fill', '#' + homePlayerColor);
-    document.getElementById('fade_homeStripes').setAttribute('fill', '#' + homePlayerColor);
-    document.getElementById('state_homeStripes').setAttribute('fill', '#' + homePlayerColor);
+    // document.getElementById('homeStripes').setAttribute('fill', '#' + homePlayerColor);
+    // document.getElementById('fade_homeStripes').setAttribute('fill', '#' + homePlayerColor);
+    // document.getElementById('state_homeStripes').setAttribute('fill', '#' + homePlayerColor);
   }
   if (awayPlayerStripesColor) {
-    document.getElementById('awayStripes').setAttribute('fill', '#' + awayPlayerStripesColor);
-    document.getElementById('fade_awayStripes').setAttribute('fill', '#' + awayPlayerStripesColor);
-    document.getElementById('state_awayStripes').setAttribute('fill', '#' + awayPlayerStripesColor);
+    // document.getElementById('awayStripes').setAttribute('fill', '#' + awayPlayerStripesColor);
+    // document.getElementById('fade_awayStripes').setAttribute('fill', '#' + awayPlayerStripesColor);
+    // document.getElementById('state_awayStripes').setAttribute('fill', '#' + awayPlayerStripesColor);
   } else {
-    document.getElementById('awayStripes').setAttribute('fill', '#' + awayPlayerColor);
-    document.getElementById('fade_awayStripes').setAttribute('fill', '#' + awayPlayerColor);
-    document.getElementById('state_awayStripes').setAttribute('fill', '#' + awayPlayerColor);
+    // document.getElementById('awayStripes').setAttribute('fill', '#' + awayPlayerColor);
+    // document.getElementById('fade_awayStripes').setAttribute('fill', '#' + awayPlayerColor);
+    // document.getElementById('state_awayStripes').setAttribute('fill', '#' + awayPlayerColor);
   }
 }
 function min(minArg1, minArg2) {

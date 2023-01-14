@@ -806,10 +806,10 @@ function displayState() {
     }
     if ((x2 * 50) / w1 + 50 < 50) {
       document.getElementById('homeState').textContent = 'Ball Safe'
-      statePositionX = 200
+      statePositionX = 250
     } else if ((x2 * 50) / w1 + 50 < 75) {
       document.getElementById('homeState').textContent = 'Attacking'
-      statePositionX = 400
+      statePositionX = 440
     } else {
       document.getElementById('homeState').textContent = 'Dangerous Attack'
       statePositionX = 560

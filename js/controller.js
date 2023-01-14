@@ -7,12 +7,12 @@ var updated_uts1 = 0, updated_uts = 0
 var currentTime, matchStartDate;
 var ptime, setTimer, stopTime = 0
 
-var topLeft = 232,
-  topPosition = 448
-var pitchX = 710,
-  pitchY = 140
+var topLeft = 160,
+  topPosition = 136
+var pitchX = 634,
+  pitchY = 222
 var w1 = pitchX / 2,
-  w2 = 486 / 2,
+  w2 = 480 / 2,
   hp = pitchY
 var x1 = 0,
   y1 = hp / 2,
@@ -115,7 +115,7 @@ function countdown() {
       drawTrack()
       showState()
     }
-
+// console.log(x_l - x)
   }, timeInterval)
 }
 function load() {
@@ -154,7 +154,7 @@ function load() {
       handleEventData(data.d);
     }
   };
-  document.getElementById('link').setAttribute('href', '../soccer-2d/index.html?eventId=' + eventId)
+  document.getElementById('link').setAttribute('href', '../ice hockey-2d/index.html?eventId=' + eventId)
 }
 function bounceBall() {
   tt = t
@@ -162,16 +162,16 @@ function bounceBall() {
   y_1 = ((y * y) / hp + y) / 2
   document
     .getElementById('ball')
-    .setAttribute('x', x + w2 - ballRadius / 2 + topLeft)
+    .setAttribute('x', mapX(x, y) + w2 - ballRadius / 2 + topLeft)
   document
     .getElementById('ball')
     .setAttribute(
       'y',
-      y - ballRadius / 2 + topPosition
+      mapY(x, y) - ballRadius / 2 + topPosition
     )
   document.getElementById('ball').setAttribute('width', ballRadius)
-  document.getElementById('ball_shadow').setAttribute('cx', x + w2 + topLeft)
-  document.getElementById('ball_shadow').setAttribute('cy', y + topPosition)
+  document.getElementById('ball_shadow').setAttribute('cx', mapX(x, y) + w2 + topLeft)
+  document.getElementById('ball_shadow').setAttribute('cy', mapY(x, y) + topPosition)
   document.getElementById('ball_shadow').setAttribute('rx', 5 * (tt + 1))
   document.getElementById('ball_shadow').setAttribute('ry', 1 * (tt + 1))
 }
@@ -182,13 +182,13 @@ function ballPosition() {
 function kickBall() {
   document
     .getElementById('ball')
-    .setAttribute('x', x + w2 - ballRadius / 2 + topLeft)
+    .setAttribute('x', mapX(x, y) + w2 - ballRadius / 2 + topLeft)
   document
     .getElementById('ball')
-    .setAttribute('y', y - ballRadius / 2 + topPosition)
+    .setAttribute('y', mapY(x, y) - ballRadius / 2 + topPosition)
   document.getElementById('ball').setAttribute('width', ballRadius)
-  document.getElementById('ball_shadow').setAttribute('cx', x + w2 + topLeft)
-  document.getElementById('ball_shadow').setAttribute('cy', y + topPosition)
+  document.getElementById('ball_shadow').setAttribute('cx', mapX(x, y) + w2 + topLeft)
+  document.getElementById('ball_shadow').setAttribute('cy', mapY(x, y) - 5 + topPosition)
   document.getElementById('ball_shadow').setAttribute('rx', 10)
   document.getElementById('ball_shadow').setAttribute('ry', 3)
 }
@@ -237,7 +237,6 @@ function stepInitialize() {
   if (timeFlag == 0) {
     if (currentState > 0) {
       if (gameState[currentState]['seconds'] > -1) {
-        // time = gameState[currentState]['seconds'] * 1000
         timeFlag = 1
       }
     }
@@ -306,33 +305,33 @@ function drawRect() {
     document.getElementById('awayStatePolygon').style.fill = 'url(#none)'
     if ((x2 * 50) / w1 + 50 < 50) {
       if (rectId == 0 || rectId == 1) {
-        document.getElementById('homeStatePolygon').points[1].x = 440
-        document.getElementById('homeStatePolygon').points[2].x = 480
-        document.getElementById('homeStatePolygon').points[3].x = 424
+        document.getElementById('homeStatePolygon').points[1].x = 352
+        document.getElementById('homeStatePolygon').points[2].x = 400
+        document.getElementById('homeStatePolygon').points[3].x = 336
       }
       if (rectId == 2) {
         document.getElementById('homeStatePolygon').points[1].x =
-          510 + (440 - 510) * rt
+          400 + (352 - 400) * rt
         document.getElementById('homeStatePolygon').points[2].x =
-          550 + (480 - 550) * rt
+          450 + (400 - 450) * rt
         document.getElementById('homeStatePolygon').points[3].x =
-          526 + (424 - 526) * rt
+          400 + (336 - 400) * rt
       }
       if (rectId == 3) {
         document.getElementById('homeStatePolygon').points[1].x =
-          614 + (440 - 614) * rt
+          448 + (352 - 614) * rt
         document.getElementById('homeStatePolygon').points[2].x =
-          700 + (480 - 700) * rt
+          700 + (400 - 700) * rt
         document.getElementById('homeStatePolygon').points[3].x =
-          678 + (424 - 678) * rt
+          678 + (336 - 678) * rt
       }
       if (rectId < 0) {
         document.getElementById('homeStatePolygon').points[1].x =
-          232 + (440 - 232) * rt
+          160 + (352 - 160) * rt
         document.getElementById('homeStatePolygon').points[2].x =
-          180 + (480 - 180) * rt
+          130 + (400 - 130) * rt
         document.getElementById('homeStatePolygon').points[3].x =
-          120 + (424 - 120) * rt
+          83 + (336 - 83) * rt
       }
       currentRectId = 1
     } else if ((x2 * 50) / w1 + 50 < 75) {
@@ -340,72 +339,72 @@ function drawRect() {
         'url(#homeAttack)'
       currentRectId = 2
       if (rectId == 0 || rectId == 2) {
-        document.getElementById('homeStatePolygon').points[1].x = 510
-        document.getElementById('homeStatePolygon').points[2].x = 550
-        document.getElementById('homeStatePolygon').points[3].x = 526
+        document.getElementById('homeStatePolygon').points[1].x = 400
+        document.getElementById('homeStatePolygon').points[2].x = 450
+        document.getElementById('homeStatePolygon').points[3].x = 400
       }
       if (rectId == 1) {
         document.getElementById('homeStatePolygon').points[1].x =
-          440 + (510 - 440) * rt
+          352 + (400 - 352) * rt
         document.getElementById('homeStatePolygon').points[2].x =
-          480 + (550 - 480) * rt
+          400 + (450 - 400) * rt
         document.getElementById('homeStatePolygon').points[3].x =
-          424 + (526 - 424) * rt
+          336 + (400 - 336) * rt
       }
       if (rectId == 3) {
         document.getElementById('homeStatePolygon').points[1].x =
-          614 + (510 - 614) * rt
+          448 + (400 - 448) * rt
         document.getElementById('homeStatePolygon').points[2].x =
-          700 + (550 - 700) * rt
+          550 + (450 - 550) * rt
         document.getElementById('homeStatePolygon').points[3].x =
-          678 + (526 - 678) * rt
+          463 + (400 - 463) * rt
       }
       if (rectId < 0) {
         document.getElementById('homeStatePolygon').points[1].x =
-          232 + (510 - 232) * rt
+          160 + (400 - 160) * rt
         document.getElementById('homeStatePolygon').points[2].x =
-          180 + (550 - 180) * rt
+          130 + (450 - 130) * rt
         document.getElementById('homeStatePolygon').points[3].x =
-          120 + (526 - 120) * rt
+          83 + (400 - 83) * rt
       }
     } else {
       currentRectId = 3
       if (rectId == 0 || rectId == 3) {
         document.getElementById('homeStatePolygon').style.fill =
           'url(#homeDangerousAttack)'
-        document.getElementById('homeStatePolygon').points[1].x = 614
-        document.getElementById('homeStatePolygon').points[2].x = 700
-        document.getElementById('homeStatePolygon').points[3].x = 678
+        document.getElementById('homeStatePolygon').points[1].x = 448
+        document.getElementById('homeStatePolygon').points[2].x = 550
+        document.getElementById('homeStatePolygon').points[3].x = 463
       }
       if (rectId == 1) {
         document.getElementById('homeStatePolygon').style.fill =
           'url(#homeDangerousAttack)'
         document.getElementById('homeStatePolygon').points[1].x =
-          440 + (614 - 440) * rt
+          352 + (448 - 352) * rt
         document.getElementById('homeStatePolygon').points[2].x =
-          480 + (700 - 480) * rt
+          400 + (550 - 400) * rt
         document.getElementById('homeStatePolygon').points[3].x =
-          424 + (678 - 424) * rt
+          336 + (463 - 336) * rt
       }
       if (rectId == 2) {
         document.getElementById('homeStatePolygon').style.fill =
           'url(#homeDangerousAttack)'
         document.getElementById('homeStatePolygon').points[1].x =
-          510 + (614 - 510) * rt
+          400 + (448 - 400) * rt
         document.getElementById('homeStatePolygon').points[2].x =
-          550 + (700 - 550) * rt
+          450 + (550 - 450) * rt
         document.getElementById('homeStatePolygon').points[3].x =
-          526 + (678 - 526) * rt
+          400 + (463 - 400) * rt
       }
       if (rectId < 0) {
         document.getElementById('homeStatePolygon').style.fill =
           'url(#homeDangerousAttack)'
         document.getElementById('homeStatePolygon').points[1].x =
-          232 + (614 - 232) * rt
+          160 + (448 - 160) * rt
         document.getElementById('homeStatePolygon').points[2].x =
-          180 + (700 - 180) * rt
+          130 + (550 - 130) * rt
         document.getElementById('homeStatePolygon').points[3].x =
-          120 + (678 - 120) * rt
+          83 + (463 - 83) * rt
       }
     }
   } else {

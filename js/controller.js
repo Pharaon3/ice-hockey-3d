@@ -6,6 +6,7 @@ var isLimitedCov = false;
 var updated_uts1 = 0, updated_uts = 0
 var currentTime, matchStartDate;
 var ptime, setTimer, stopTime = 0
+var setTimer1 = true;
 
 var topLeft = 160,
   topPosition = 136
@@ -63,18 +64,7 @@ function countdown() {
     updated_uts += timeInterval / 1000
     if (setTimer) currentTime = updated_uts
     else currentTime = stopTime
-    // var seconds = Math.floor(updated_uts / 1000)
-    var seconds1 = Math.floor(currentTime)
-    var minute1 = Math.floor(seconds1 / 60)
-    var second1 = seconds1 % 60
-    document.getElementById('time').textContent =
-      Math.floor(minute1 / 10) +
-      '' +
-      (minute1 % 10) +
-      ':' +
-      Math.floor(second1 / 10) +
-      '' +
-      (second1 % 10)
+
     if (matchStartDate) {
       var seconds = Math.floor((matchStartDate - currentDate.getTime()) / 1000)
       var second = seconds % 60
@@ -90,13 +80,13 @@ function countdown() {
       setCenterFrame('Limited Covarage', homeScore + ' - ' + awayScore)
     }
     //every 10ms
-    time += timeInterval
+    ttt++;
     if (currentState == 0) {
       if (gameState.length > 0) {
         stepInitialize()
       }
     } else {
-      if (Math.floor(time) % 500 == 0) {
+      if (Math.floor(ttt) % 50 == 0) {
         stepInitialize()
       }
       t += 1 / 51
@@ -115,11 +105,24 @@ function countdown() {
       drawTrack()
       showState()
     }
-// console.log(x_l - x)
+
+    if(gameState.length && gameState[currentState]['type'] == 'timeout'){
+      setTimer = false
+      setCenterFrame('Time Out', teamNames[gameState[currentState]['team']])
+    }
+    time -= timeInterval;
+    if(setTimer1) currentTime = time
+    else currentTime = getDataTime
+    let thisSecond = Math.floor(currentTime / 1000);
+    var minute = Math.floor(thisSecond / 60);
+    var second = thisSecond % 60;
+    document.getElementById('time').textContent = max(Math.floor(minute / 10), 0) + '' + max(0, (minute % 10)) + ':' + max(0, Math.floor(second / 10)) + '' + max(0, (second % 10));
+
   }, timeInterval)
 }
 function load() {
   xb = x1 + w1
+  ttt = 0
   yb = y1
   t = 0.005
   time = 0
@@ -157,6 +160,7 @@ function load() {
   document.getElementById('link').setAttribute('href', '../ice hockey-2d/index.html?eventId=' + eventId)
 }
 function bounceBall() {
+  if(!setTimer)return
   tt = t
   x_1 = mapX(x, y)
   y_1 = ((y * y) / hp + y) / 2
@@ -178,6 +182,8 @@ function bounceBall() {
 function ballPosition() {
   x = x1 + (x2 - x1) * t
   y = y1 + (y2 - y1) * t
+  x_b = mapX(x, y)
+  y_b = mapY(x, y)
 }
 function kickBall() {
   document
@@ -636,8 +642,8 @@ function showState() {
         if (y2 < hp * 0.3 && x2 > w1 * 0.6) document.getElementById('homeKickPolygon').style.fill = 'url(#homeTopKick)'
         if (y2 > hp * 0.7 && x2 > w1 * 0.6) document.getElementById('homeKickPolygon').style.fill = 'url(#homeBottomKick)'
         document.getElementById('homeKickPolygon').points[0].x =
-          x_b + w2 + topLeft
-        document.getElementById('homeKickPolygon').points[0].y = y_b + topPosition
+          mapX(x, y) + w2 + topLeft
+        document.getElementById('homeKickPolygon').points[0].y = mapY(x, y) + topPosition
         document.getElementById('homeState').textContent = gameState[currentState]['name']
       } else {
         document.getElementById('awayKickPolygon').style.fill = 'url(#awayKick)'
@@ -739,7 +745,6 @@ function remove() {
   document.getElementById('awayKickPolygon').style.fill = 'url(#none)'
   document.getElementById('homeStateLabels').style.display = 'none'
   document.getElementById('awayStateLabels').style.display = 'none'
-  document.getElementById('stateBoard').setAttribute('fill-opacity', 0)
 
   document.getElementById('cardBoard').setAttribute('width', 0)
   document.getElementById('cardBoard').setAttribute('height', 0)
@@ -916,13 +921,14 @@ function handleEventData(data) {
       isLimitedCov = true
     }
     else isLimitedCov = false
+
     setTimer = true
-    ptime = match['ptime'] * 1000 - 45 * 60 * 1000 * (match['p'] - 1) - 148 * 1000
-    if (match['p'] == 0) setTimer = false
-    if ((match['updated_uts'] - match['ptime']) + 45 * 60 * (match['p'] - 1) != updated_uts1) {
-      updated_uts1 = (match['updated_uts'] - match['ptime']) + 45 * 60 * (match['p'] - 1)
-      updated_uts = updated_uts1
-    }
+    if(match['p'] == 31) setTimer = false
+    if(match['p'] == 32) setTimer = false
+    if(match['p'] == 0) setTimer = false
+    periodlength = match['periodlength']
+    getDataTime = match['timeinfo']['remaining'] * 1000
+    setTimer1 = match['timeinfo']['running']
 
     // Team Name Setting
     var teams = match['teams']
@@ -1085,18 +1091,10 @@ function handleInfoData(data) {
   awayPlayerLongSleeveColor = jerseys['away']['player']['sleevelong']
   document.getElementById('homePlayerBase').setAttribute('fill', '#' + homePlayerColor);
   document.getElementById('awayPlayerBase').setAttribute('fill', '#' + awayPlayerColor);
-  document.getElementById('homePlayerBase1').setAttribute('fill', '#' + homePlayerColor);
-  document.getElementById('awayPlayerBase1').setAttribute('fill', '#' + awayPlayerColor);
-  document.getElementById('homePlayerBase2').setAttribute('fill', '#' + homePlayerColor);
-  document.getElementById('awayPlayerBase2').setAttribute('fill', '#' + awayPlayerColor);
   // document.getElementById('fade_homePlayerBase').setAttribute('fill', '#' + homePlayerColor);
   // document.getElementById('fade_awayPlayerBase').setAttribute('fill', '#' + awayPlayerColor);
   document.getElementById('state_homePlayerBase').setAttribute('fill', '#' + homePlayerColor);
   document.getElementById('state_awayPlayerBase').setAttribute('fill', '#' + awayPlayerColor);
-  document.getElementById('state_homePlayerBase1').setAttribute('fill', '#' + homePlayerColor);
-  document.getElementById('state_awayPlayerBase1').setAttribute('fill', '#' + awayPlayerColor);
-  document.getElementById('state_homePlayerBase2').setAttribute('fill', '#' + homePlayerColor);
-  document.getElementById('state_awayPlayerBase2').setAttribute('fill', '#' + awayPlayerColor);
   if (homePlayerSleeveColor) {
     document.getElementById('homePlayerLeftSleeve').setAttribute('fill', '#' + homePlayerSleeveColor);
     document.getElementById('homePlayerRightSleeve').setAttribute('fill', '#' + homePlayerSleeveColor);
@@ -1128,12 +1126,12 @@ function handleInfoData(data) {
     document.getElementById('state_awayPlayerRightSleeve').setAttribute('fill', '#' + awayPlayerColor);
   }
   if (homePlayerLongSleeveColor) {
-    // document.getElementById('homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
-    // document.getElementById('homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
+    document.getElementById('homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
+    document.getElementById('homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
     // document.getElementById('fade_homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
     // document.getElementById('fade_homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
-    // document.getElementById('state_homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
-    // document.getElementById('state_homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
+    document.getElementById('state_homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
+    document.getElementById('state_homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
   } else {
     // document.getElementById('homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerColor);
     // document.getElementById('homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerColor);
@@ -1143,12 +1141,12 @@ function handleInfoData(data) {
     // document.getElementById('state_homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerColor);
   }
   if (awayPlayerLongSleeveColor) {
-    // document.getElementById('awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
-    // document.getElementById('awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
+    document.getElementById('awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
+    document.getElementById('awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
     // document.getElementById('fade_awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
     // document.getElementById('fade_awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
-    // document.getElementById('state_awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
-    // document.getElementById('state_awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
+    document.getElementById('state_awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
+    document.getElementById('state_awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
   } else {
     // document.getElementById('awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
     // document.getElementById('awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerColor);

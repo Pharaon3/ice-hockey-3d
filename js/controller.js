@@ -91,10 +91,10 @@ function countdown() {
           stepInitialize()
         }
       } else {
-        if (Math.floor(ttt) % 100 == 0) {
+        if (Math.floor(ttt) % 50 == 0) {
           stepInitialize()
         }
-        t += 1 / 101
+        t += 1 / 51
         ballPosition()
         drawRect()
         displayState()
@@ -185,8 +185,8 @@ function bounceBall() {
   document.getElementById('ball').setAttribute('width', ballRadius)
   document.getElementById('ball_shadow').setAttribute('cx', mapX(x, y) + w2 + topLeft)
   document.getElementById('ball_shadow').setAttribute('cy', mapY(x, y) + topPosition)
-  document.getElementById('ball_shadow').setAttribute('rx', 5 * (tt + 1))
-  document.getElementById('ball_shadow').setAttribute('ry', 2 * (tt + 1))
+  document.getElementById('ball_shadow').setAttribute('rx', 10 * (tt + 1))
+  document.getElementById('ball_shadow').setAttribute('ry', 4 * (tt + 1))
 }
 function ballPosition() {
   x = x1 + (x2 - x1) * t
@@ -252,6 +252,8 @@ function stepInitialize() {
   if (timeFlag == 0) {
     if (currentState > 0) {
       if (gameState[currentState]['seconds'] > -1) {
+        // time = gameState[currentState]['seconds'] * 1000
+        time = getDataTime
         timeFlag = 1
       }
     }
@@ -262,6 +264,11 @@ function stepInitialize() {
   y1 = y2
   if (currentState < gameState.length - 1) {
     currentState = max(currentState + 1, gameState.length - 10)
+    time = getDataTime
+    if(gameState[currentState]['seconds'] > 0){
+      // time = gameState[currentState]['seconds'] * 1000
+      if(gameState[currentState]['type'] == 'periodscore') setTimer = 0;
+    }
     if (gameState[currentState]['X'] > -1) {
       x2 = ((gameState[currentState]['X'] - 50) * w1) / 50
       y2 = (gameState[currentState]['Y'] * hp) / 100
@@ -561,7 +568,6 @@ function showState() {
   document.getElementById('substitutionInPlayer').textContent = ''
 
   document.getElementById('bottom_text').textContent = ''
-  document.getElementById('bottom2_text').textContent = ''
   document.getElementById('center_rect').setAttribute('fill-opacity', 0)
   document.getElementById('center_text').textContent = ''
   document.getElementById('offsideRect').points[0].x = 232
@@ -991,7 +997,15 @@ function handleEventData(data) {
     }
     if (match['p'] == 32) {
       setTimer = false
-      setCenterFrame('Break', homeScore + ' - ' + awayScore)
+      setCenterFrame('End of 2nd Period', homeScore + ' - ' + awayScore)
+    }
+    if (match['p'] == 33) {
+      setTimer = false
+      setCenterFrame('End of 3rd Period', homeScore + ' - ' + awayScore)
+    }
+    if (match['p'] == 34) {
+      setTimer = false
+      setCenterFrame('End of 4th Period', homeScore + ' - ' + awayScore)
     }
     if (match['p'] == 0) {
       setTimer = false

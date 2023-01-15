@@ -60,68 +60,73 @@ var isGoal
 function countdown() {
   var interval = setInterval(function () {
     changeScreenSize()
-    const currentDate = new Date;
-    updated_uts += timeInterval / 1000
-    if (setTimer) currentTime = updated_uts
-    else currentTime = stopTime
-
-    if (matchStartDate) {
-      var seconds = Math.floor((matchStartDate - currentDate.getTime()) / 1000)
-      var second = seconds % 60
-      var minutes = Math.floor(seconds / 60)
-      var minute = minutes % 60
-      var hours = Math.floor(minutes / 60)
-      var hour = hours % 24
-      var days = Math.floor(hours / 24)
-      setCenterFrame('Not Started', days + 'D ' + hour + 'H ' + minute + 'M ' + second + 'S')
+    if(isGoal){
+      isGoal ++
+      if(isGoal > 9) isGoal = 0
     }
+    else {
+      const currentDate = new Date;
+      updated_uts += timeInterval / 1000
+      if (setTimer) currentTime = updated_uts
+      else currentTime = stopTime
 
-    if (isLimitedCov) {
-      setCenterFrame('Limited Covarage', homeScore + ' - ' + awayScore)
-    }
-    //every 10ms
-    ttt++;
-    if (currentState == 0) {
-      if (gameState.length > 0) {
-        stepInitialize()
+      if (matchStartDate) {
+        var seconds = Math.floor((matchStartDate - currentDate.getTime()) / 1000)
+        var second = seconds % 60
+        var minutes = Math.floor(seconds / 60)
+        var minute = minutes % 60
+        var hours = Math.floor(minutes / 60)
+        var hour = hours % 24
+        var days = Math.floor(hours / 24)
+        setCenterFrame('Not Started', days + 'D ' + hour + 'H ' + minute + 'M ' + second + 'S')
       }
-    } else {
-      if (Math.floor(ttt) % 50 == 0) {
-        stepInitialize()
+
+      if (isLimitedCov) {
+        setCenterFrame('Limited Covarage', homeScore + ' - ' + awayScore)
       }
-      t += 1 / 51
-      ballPosition()
-      drawRect()
-      displayState()
-      if (x2 == x1 && y2 == y1) {
-        bounceBall()
-      } else {
-        if (gameState[currentState]['type']) {
-          bounceBall();
-        } else {
-          kickBall()
+      //every 10ms
+      ttt++;
+      if (currentState == 0) {
+        if (gameState.length > 0) {
+          stepInitialize()
         }
+      } else {
+        if (Math.floor(ttt) % 100 == 0) {
+          stepInitialize()
+        }
+        t += 1 / 101
+        ballPosition()
+        drawRect()
+        displayState()
+        if (x2 == x1 && y2 == y1) {
+          bounceBall()
+        } else {
+          if (gameState[currentState]['type']) {
+            bounceBall();
+          } else {
+            kickBall()
+          }
+        }
+        drawTrack()
+        showState()
       }
-      drawTrack()
-      showState()
-    }
 
-    if(gameState.length && gameState[currentState]['type'] == 'timeout'){
-      setTimer = false
-      setCenterFrame('Time Out', teamNames[gameState[currentState]['team']])
+      if(gameState.length && gameState[currentState]['type'] == 'timeout'){
+        setTimer = false
+        setCenterFrame('Time Out', teamNames[gameState[currentState]['team']])
+      }
+      if(gameState.length && gameState[currentState]['type'] == "tv_timeout_start"){
+        setTimer = false
+        setCenterFrame('TV Time Out', homeScore + ' - ' + awayScore)
+      }
+      time -= timeInterval;
+      if(setTimer1) currentTime = time
+      else currentTime = getDataTime
+      let thisSecond = Math.floor(currentTime / 1000);
+      var minute = Math.floor(thisSecond / 60);
+      var second = thisSecond % 60;
+      document.getElementById('time').textContent = max(Math.floor(minute / 10), 0) + '' + max(0, (minute % 10)) + ':' + max(0, Math.floor(second / 10)) + '' + max(0, (second % 10));
     }
-    if(gameState.length && gameState[currentState]['type'] == "tv_timeout_start"){
-      setTimer = false
-      setCenterFrame('TV Time Out', homeScore + ' - ' + awayScore)
-    }
-    time -= timeInterval;
-    if(setTimer1) currentTime = time
-    else currentTime = getDataTime
-    let thisSecond = Math.floor(currentTime / 1000);
-    var minute = Math.floor(thisSecond / 60);
-    var second = thisSecond % 60;
-    document.getElementById('time').textContent = max(Math.floor(minute / 10), 0) + '' + max(0, (minute % 10)) + ':' + max(0, Math.floor(second / 10)) + '' + max(0, (second % 10));
-
   }, timeInterval)
 }
 function load() {

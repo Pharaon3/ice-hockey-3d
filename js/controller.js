@@ -110,6 +110,10 @@ function countdown() {
       setTimer = false
       setCenterFrame('Time Out', teamNames[gameState[currentState]['team']])
     }
+    if(gameState.length && gameState[currentState]['type'] == "tv_timeout_start"){
+      setTimer = false
+      setCenterFrame('TV Time Out', homeScore + ' - ' + awayScore)
+    }
     time -= timeInterval;
     if(setTimer1) currentTime = time
     else currentTime = getDataTime
@@ -574,17 +578,7 @@ function showState() {
       setCenterFrame(gameState[currentState]['name'], teamNames[gameState[currentState]['team']])
     }
     if (gameState[currentState]['type'] == 'goal') {
-      showAction()
-      if (isGoal == 1) {
-        document.getElementById('score-fade-out').setAttribute('opacity', 1);
-        if (t < 0.5) {
-          if (gameState[currentState]['team'] == 'home') document.getElementById('fade_score').textContent = homeScore - 1 + ' - ' + awayScore
-          if (gameState[currentState]['team'] == 'away') document.getElementById('fade_score').textContent = homeScore + ' - ' + awayScore - 1
-        }
-      }
-      if (isGoal == 2) {
-        document.getElementById('score-fade-out').setAttribute('opacity', 1 - t);
-      }
+      setCenterFrame('Goal', teamNames[gameState[currentState]['team']])
     }
     if (gameState[currentState]['type'] == 'substitution') {
       document.getElementById('substitutionOut').setAttribute('fill-opacity', 0.5)
@@ -988,7 +982,15 @@ function handleEventData(data) {
 
     if (match['p'] == 31) {
       setTimer = false
-      setCenterFrame('Halftime', homeScore + ':' + awayScore)
+      setCenterFrame('End of 1st Period', homeScore + ' - ' + awayScore)
+    }
+    if (match['p'] == 32) {
+      setTimer = false
+      setCenterFrame('Break', homeScore + ' - ' + awayScore)
+    }
+    if (match['p'] == 0) {
+      setTimer = false
+      setCenterFrame('Match End', homeScore + ' - ' + awayScore)
     }
   }
 
@@ -997,7 +999,7 @@ function handleEventData(data) {
   var newEvents = new Array()
   Object.values(events).forEach((event) => {
     if (event['seconds'] > 0 && timeSet == 0) {
-      time = event['seconds'] * 1000;
+      time = event['seconds'] * 1000 - match['p'] * 60 * match['periodlength'] * 1000;
       timeSet = 1;
     }
     if (
@@ -1007,6 +1009,8 @@ function handleEventData(data) {
       event['type'] != 'ballcoordinates' &&
       event['type'] != 'goal_kick' &&
       event['type'] != 'corner' &&
+      event['type'] != 'timeinfo' &&
+      event['type'] != 'timerunning' &&
       event['type'] != 'possible_event'
     ) {
       newEvents.push(event)
@@ -1133,12 +1137,12 @@ function handleInfoData(data) {
     document.getElementById('state_homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
     document.getElementById('state_homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerLongSleeveColor);
   } else {
-    // document.getElementById('homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerColor);
-    // document.getElementById('homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerColor);
+    document.getElementById('homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerColor);
+    document.getElementById('homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerColor);
     // document.getElementById('fade_homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerColor);
     // document.getElementById('fade_homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerColor);
-    // document.getElementById('state_homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerColor);
-    // document.getElementById('state_homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerColor);
+    document.getElementById('state_homePlayerLeftLongSleeve').setAttribute('fill', '#' + homePlayerColor);
+    document.getElementById('state_homePlayerRightLongSleeve').setAttribute('fill', '#' + homePlayerColor);
   }
   if (awayPlayerLongSleeveColor) {
     document.getElementById('awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
@@ -1148,12 +1152,12 @@ function handleInfoData(data) {
     document.getElementById('state_awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
     document.getElementById('state_awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerLongSleeveColor);
   } else {
-    // document.getElementById('awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
-    // document.getElementById('awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
+    document.getElementById('awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
+    document.getElementById('awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
     // document.getElementById('fade_awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
     // document.getElementById('fade_awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
-    // document.getElementById('state_awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
-    // document.getElementById('state_awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
+    document.getElementById('state_awayPlayerLeftLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
+    document.getElementById('state_awayPlayerRightLongSleeve').setAttribute('fill', '#' + awayPlayerColor);
   }
   if (homePlayerStripesColor) {
     // document.getElementById('homeStripes').setAttribute('fill', '#' + homePlayerStripesColor);

@@ -62,7 +62,8 @@ function countdown() {
     changeScreenSize()
     if(isGoal){
       isGoal ++
-      if(isGoal > 9) isGoal = 0
+      if(isGoal > 10000 / timeInterval) isGoal = 0
+      setCenterFrame('Goal', teamNames[gameState[currentState]['team']])
     }
     else {
       const currentDate = new Date;
@@ -82,7 +83,7 @@ function countdown() {
       }
 
       if (isLimitedCov) {
-        setCenterFrame('Limited Covarage', homeScore + ' - ' + awayScore)
+        setCenterFrame('Limited Coverage', homeScore + ' - ' + awayScore)
       }
       //every 10ms
       ttt++;
@@ -166,7 +167,7 @@ function load() {
       handleEventData(data.d);
     }
   };
-  document.getElementById('link').setAttribute('href', '../ice-hockey-2d/index.html?eventId=' + eventId)
+  document.getElementById('link').setAttribute('href', '../hockey-2d/index.html?eventId=' + eventId)
 }
 function bounceBall() {
   if(!setTimer)return
@@ -317,7 +318,7 @@ function stepInitialize() {
     resetTrack()
   }
   rectId = currentRectId
-  if (gameState[currentState]['type'] == 'goal') isGoal++;
+  if (gameState[currentState]['type'] == 'goal') isGoal = 1
   else isGoal = 0;
 }
 function drawRect() {
@@ -325,6 +326,8 @@ function drawRect() {
   if (rt > 1) rt = 1
   if (gameState[currentState]['team'] == 'home') {
     document.getElementById('awayStatePolygon').style.fill = 'url(#none)'
+    document.getElementById('homeStatePolygon').style.fill =
+      'url(#homeSafe)'
     if ((x2 * 50) / w1 + 50 < 50) {
       if (rectId == 0 || rectId == 1) {
         document.getElementById('homeStatePolygon').points[1].x = 320
@@ -815,7 +818,7 @@ function displayState() {
       statePositionY = 300
     }
     if ((x2 * 50) / w1 + 50 < 50) {
-      document.getElementById('homeState').textContent = 'Ball Safe'
+      document.getElementById('homeState').textContent = 'Puck Safe'
       statePositionX = 250
     } else if ((x2 * 50) / w1 + 50 < 75) {
       document.getElementById('homeState').textContent = 'Attacking'
@@ -847,7 +850,7 @@ function displayState() {
       document.getElementById('awayState').textContent = 'Attacking'
       statePositionX = 400
     } else {
-      document.getElementById('awayState').textContent = 'Ball Safe'
+      document.getElementById('awayState').textContent = 'Puck Safe'
       statePositionX = 550
     }
     document.getElementById('awayStateLabels').setAttribute('transform', 'translate(' + statePositionX + ',' + statePositionY + ')');
@@ -958,7 +961,7 @@ function handleEventData(data) {
 
     center_text = capitalizeWords(match['status']['name'].split(" ")).join(' ')
     document.getElementById('period').textContent = center_text
-    if (match['status']['name'] == 'Halftime') stopTime = 45 * 60;
+    // if (match['status']['name'] == 'Halftime') stopTime = 45 * 60;
     if (match['status']['name'] == 'Not started') {
       stopTime = 0 * 60;
       document.getElementById('period').textContent = ''
